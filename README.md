@@ -35,7 +35,7 @@ Third Party library are used in this project
 
 
 ### Lessons learned
-1️⃣ asdf
+🐌 asdf
 
 ## Demo
  
