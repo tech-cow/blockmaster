@@ -37,12 +37,13 @@ Third Party library are used in this project
 ## Demo
 
 
+
 ## License
 
-⚡️ MIT
+🌱 MIT 🌱
 
 ---
 
-> ![Chrome](feather/chrome.svg) [yuzhoujr.com](http://www.yuzhoujr.com) &nbsp;&middot;&nbsp;
-> ![github](feather/github.svg)  [@yuzhoujr](https://github.com/yuzhoujr) &nbsp;&middot;&nbsp;
-> ![linkedin](feather/linkedin.svg)  [@yuzhoujr](https://linkedin.com/in/yuzhoujr)
+> ![home](http://yuzhoujr.com/emoji/home.svg) [yuzhoujr.com](http://www.yuzhoujr.com) &nbsp;&middot;&nbsp;
+> ![github](http://yuzhoujr.com/emoji/github.svg)  [@yuzhoujr](https://github.com/yuzhoujr) &nbsp;&middot;&nbsp;
+> ![linkedin](http://yuzhoujr.com/emoji/linkedin.svg)  [@yuzhoujr](https://linkedin.com/in/yuzhoujr)
