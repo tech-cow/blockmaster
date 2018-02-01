@@ -35,10 +35,20 @@ Third Party library are used in this project
 
 
 ### Lessons learned
-🐌 asdf
+
+
+🐌 **@staticmethod** is a method that belongs to a class but behaves exactly like a regular function, which doesn't take any first args such as self or class.
+
+```python
+@staticmethod
+def hash(block):
+    #Hashes a Block
+    pass
+```
+
 
 ## Demo
- 
+
 
 
 ## License
