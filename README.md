@@ -1,5 +1,5 @@
 <h3 style="text-align:center;font-weight: 300;" align="center">
-  <img src="" width="160px">
+  <img src="http://yuzhoujr.com/logo/blockMaster.png" width="160px">
 </h3>
 
 <p align="center">
