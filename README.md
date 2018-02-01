@@ -11,8 +11,7 @@
 
 >
 
-##  Features
-
+<!-- ##  Features -->
 
 ## External Libraries
 
@@ -32,19 +31,35 @@ Third Party library are used in this project
 ```
 
 ### Code Walkthrough
+In `class Blockchain`:
 
 
 ### Lessons learned
 
 
-🐌 **@staticmethod** is a method that belongs to a class but behaves exactly like a regular function, which doesn't take any first args such as self or class.
-
+🐌 **@staticmethod** is a method that belongs to a class but behaves exactly like a regular function, which doesn't take any first `arg` such as `self` or `class`.
 ```python
 @staticmethod
 def hash(block):
     #Hashes a Block
     pass
 ```
+---
+🍜 **@property** is a shortcut for creating read-only properties. which, in turn, is the simplified syntax for creating a `property` with just a getter.
+```python
+@property
+def x(self):
+    return self._x
+```
+
+is equivalent to
+
+```python
+def getx(self):
+    return self._x
+x = property(getx)
+```
+
 
 
 ## Demo
