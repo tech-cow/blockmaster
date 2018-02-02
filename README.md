@@ -203,7 +203,7 @@ def hash(block):
     return hashlib.sha256(block_string).hexdigest()
 ```
 
-Step 6: Understanding Proof of Work
+#### Step 6: Understanding Proof of Work
 
 To understand POW or Proof of Work, read this [blog](https://medium.com/@karthik.seshu/cryptocurrency-proof-of-work-vs-proof-of-stake-e1eee1420b10). Quote from Karthik:
 
