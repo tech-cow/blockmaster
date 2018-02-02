@@ -82,7 +82,7 @@ block = {
 ```
 #### Step 3: Adding Transactions to a Block
 
-We will also need to feed `transactions` into each `Block`, the new_transaction function is quite straight-forward as the following.
+We will also need to feed `transactions` into each `Block`, the data goes right into `self.current_transactions`, yet the return value is the index of the block that will hold the transaction, which will be useful in later implementation.
 
 ```python
 class Blockchain(object):
