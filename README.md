@@ -13,7 +13,7 @@
 
 <!-- ## Features -->
 
- ## External Libraries
+## External Libraries
 
 Third Party library are used in this project
 
@@ -30,7 +30,7 @@ Package    |      Description
 <!-- ```bash
 ``` -->
 
-### Code Walkthrough
+## Code Walkthrough
 
 #### Step 1: Creating Blockchain Class
 In `class Blockchain`: a Blockchain object will contain a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create a new block, keep track new transactions, and provide a sophisticated hash algorithm.
@@ -61,6 +61,8 @@ class Blockchain(object):
         pass
 ```
 
+---
+
 #### Step 2: Define a Block
 A single `Block` consist the following data: an `index`, a `timestamp` (in Unix time), a list of `transactions`, a `proof`(implemented later), and the `hash` of the previous Block.
 
@@ -79,6 +81,8 @@ block = {
     'proof': 324984774000,
     'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
 }
+
+---
 
 ```
 #### Step 3: Adding Transactions to a Block
@@ -106,6 +110,7 @@ class Blockchain(object):
 
         return self.last_block['index'] + 1
 ```
+---
 
 #### Step 4: Initialize a Genesis Block in Constructor
 
@@ -120,6 +125,8 @@ class Blockchain(object):
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
 ```
+
+---
 
 #### Step 5: Let's implement `new_block()`, `new_transaction()` and `hash()`
 
@@ -199,7 +206,7 @@ Step 6: Understanding Proof of Work
 
 
 
-### Lessons learned
+### Notes
 
 🐌 **@staticmethod** is a method that belongs to a class but behaves exactly like a regular function, which doesn't take any first `arg` such as `self` or `class`.
 
