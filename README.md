@@ -32,7 +32,7 @@ Package    |      Description
 ### Code Walkthrough
 
 #### Step 1: Creating Blockchain Class
-In `class Blockchain`: a Blockchain object will contains a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create new block, keep track new transactions, and provide a sophisticated hash algorithm.
+In `class Blockchain`: a Blockchain object will contain a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create a new block, keep track new transactions, and provide a sophisticated hash algorithm.
 
 ```python
 # Abstract Data Type of a Blockchain
@@ -82,7 +82,7 @@ block = {
 ```
 #### Step 3: Adding Transactions to a Block
 
-We will also need to feed transactions into each Blocks, the new_transaction function is quite straight-forward as the following.
+We will also need to feed `transactions` into each `Block`, the new_transaction function is quite straight-forward as the following.
 
 ```python
 class Blockchain(object):
@@ -106,25 +106,52 @@ class Blockchain(object):
         return self.last_block['index'] + 1
 ```
 
+#### Step 4: Initialize a Genesis Block in Constructor
 
+Each Blockchain needs to be initialized with a `Genesis Block` that other blocks can build upon. One thing to notice is that this block will have an arbitrary value for previous_hash because there is technically no previous_hash during its creation.
 
+```python
+class Blockchain(object):
+    def __init__(self):
+        self.current_transactions = []
+        self.chain = []
 
+        # Create the genesis block
+        self.new_block(previous_hash=1, proof=100)
+```
 
+#### Step 5: Let's implement `new_block()`, `new_transaction()` and `hash()`
 
+Time to actually implements some behaviors how our Blockchain would work.
+Recall from Step 2 on how a Block looks like, we will build new blocks based on the same model following a few rules:
+1. Increment `index` as we go
+2. Pass in current time, here we are using a function from `time` package to get real-life timestamp
+3. Pass in `transactions` using our `transactions()` method
+4. Erase value inside of `self.current_transactions` array since this array only serves as a temporary array to hold the most recent transaction.
 
+```python
+def new_block(self, proof, previous_hash=None):
+    """
+    Create a new Block in the Blockchain
+    :param proof: <int> The proof given by the Proof of Work algorithm
+    :param previous_hash: (Optional) <str> Hash of previous Block
+    :return: <dict> New Block
+    """
 
+    block = {
+        'index': len(self.chain) + 1,
+        'timestamp': time(),
+        'transactions': self.current_transactions,
+        'proof': proof,
+        'previous_hash': previous_hash or self.hash(self.chain[-1]),
+    }
 
+    # Reset the current list of transactions
+    self.current_transactions = []
 
-
-
-
-
-
-
-
-
-
-
+    self.chain.append(block)
+    return block
+```
 
 
 
