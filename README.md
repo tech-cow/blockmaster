@@ -22,17 +22,18 @@ Package    |      Description
 `hashlib`  | SHA-256 Algorithm Core
 `datetime` | Access real-time date
 
-## Getting Started
+<!-- ## Getting Started
 
-### Run
+### Run -->
 
-````bash
-```
+<!-- ```bash
+``` -->
 
 ### Code Walkthrough
-In `class Blockchain`:
+In `class Blockchain`: a Blockchain object will contains a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create new block, keep track new transactions, and provide a sophisticated hash algorithm.
 
 ```python
+# Abstract Data Type of a Blockchain
 class Blockchain(object):
     def __init__(self):
         self.chain = []
@@ -55,7 +56,7 @@ class Blockchain(object):
     def last_block(self):
         # Returns the last Block in the chain
         pass
-````
+```
 
 ### Lessons learned
 
