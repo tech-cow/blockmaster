@@ -1,3 +1,8 @@
+import hashlib
+import json
+from time import time
+
+
 class Blockchain(object):
     def __init__(self):
         self.chain = []
@@ -16,8 +21,8 @@ class Blockchain(object):
         """
         block = {
             'index' : len(self.chain) + 1,
-            'timestamp' : time()
-            'transactions': self.current_transactions,
+            'timestamp' : time(),
+            'transactions' : self.current_transactions,
             'proof': proof,
             'previous_hash' : previous_hash or self.hash(self.chain[-1])
         }
@@ -47,13 +52,18 @@ class Blockchain(object):
         return self.last_block['index'] + 1
 
 
+    @property
+    def last_block(self):
+        return self.chain[-1]
 
     @staticmethod
     def hash(block):
-        #Hashes a Block
-        pass
-
-    @property
-    def last_block(self):
-        #Return last block in the chain
-        pass
+        """
+        Creates a SHA-256 hash of a Block
+        Block String needs to be sorted for consistency, as key in dictionary genenarted
+        in random order.
+        :param block: <dict> Block
+        :return: <str>
+        """
+        block_string = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()

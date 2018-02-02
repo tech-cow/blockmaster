@@ -122,6 +122,7 @@ class Blockchain(object):
 
 #### Step 5: Let's implement `new_block()`, `new_transaction()` and `hash()`
 
+`new_block()`
 Time to actually implements some behaviors how our Blockchain would work.
 Recall from Step 2 on how a Block looks like, we will build new blocks based on the same model following a few rules:
 1. Increment `index` as we go
@@ -153,6 +154,46 @@ def new_block(self, proof, previous_hash=None):
     return block
 ```
 
+`new_transaction()`
+Very self-explanatory, won't elaborate on this, this newly created transaction will later feed into `new_block`
+
+```python
+def new_transaction(self, sender, recipient, amount):
+    """
+    Creates a new transaction to go into the next mined Block
+    :param sender: <str> Address of the Sender
+    :param recipient: <str> Address of the Recipient
+    :param amount: <int> Amount
+    :return: <int> The index of the Block that will hold this transaction
+    """
+
+    self.current_transactions.append({
+        'sender': sender,
+        'recipient' : recipient,
+        'amount' : amount,
+    })
+
+    return self.last_block['index'] + 1
+```
+
+`hash()`
+Before feeding the string to our hashing algorithm, we need to sort the key inside our dictionary because a key in the dictionary has arbitrary order, thus disrupt output hash due to inconsistency.
+We are using [SHA-256 Hashing Algorithm](https://www.youtube.com/watch?v=DMtFhACPnTY) to create hexadecimal string hash.
+
+```python
+@staticmethod
+def hash(block):
+    """
+    Creates a SHA-256 hash of a Block
+    Block String needs to be sorted for consistency, as key in dictionary genenarted
+    in random order.
+    :param block: <dict> Block
+    :return: <str>
+    """
+    block_string = json.dumps(block, sort_keys=True).encode()
+    return hashlib.sha256(block_string).hexdigest()
+
+```
 
 
 
