@@ -20,7 +20,8 @@ Third Party library are used in this project
 Package    |      Description
 ---------- | :--------------------:
 `hashlib`  | SHA-256 Algorithm Core
-`datetime` | Access real-time date
+`time` | Access real-time date
+`json` | Speed up dictionary sorting
 
 <!-- ## Getting Started
 
@@ -192,8 +193,9 @@ def hash(block):
     """
     block_string = json.dumps(block, sort_keys=True).encode()
     return hashlib.sha256(block_string).hexdigest()
-
 ```
+
+Step 6: Understanding Proof of Work
 
 
 
