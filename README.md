@@ -30,6 +30,8 @@ Package    |      Description
 ``` -->
 
 ### Code Walkthrough
+
+#### Step 1: Creating Blockchain Class
 In `class Blockchain`: a Blockchain object will contains a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create new block, keep track new transactions, and provide a sophisticated hash algorithm.
 
 ```python
@@ -57,6 +59,75 @@ class Blockchain(object):
         # Returns the last Block in the chain
         pass
 ```
+
+#### Step 2: Define a Block
+A single `Block` consist the following data: an `index`, a `timestamp` (in Unix time), a list of `transactions`, a `proof`(implemented later), and the `hash` of the previous Block.
+
+Here is how a single entry looks like:
+```python
+block = {
+    'index': 1,
+    'timestamp': 1506057125.900785,
+    'transactions': [
+        {
+            'sender': "8527147fe1f5426f9dd545de4b27ee00",
+            'recipient': "a77f5cdfa2934df3954a5c7c7da5df1f",
+            'amount': 5,
+        }
+    ],
+    'proof': 324984774000,
+    'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+}
+
+```
+#### Step 3: Adding Transactions to a Block
+
+We will also need to feed transactions into each Blocks, the new_transaction function is quite straight-forward as the following.
+
+```python
+class Blockchain(object):
+    ...
+
+    def new_transaction(self, sender, recipient, amount):
+        """
+        Creates a new transaction to go into the next mined Block
+        :param sender: <str> Address of the Sender
+        :param recipient: <str> Address of the Recipient
+        :param amount: <int> Amount
+        :return: <int> The index of the Block that will hold this transaction
+        """
+
+        self.current_transactions.append({
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount,
+        })
+
+        return self.last_block['index'] + 1
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Lessons learned
 
