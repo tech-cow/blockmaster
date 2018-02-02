@@ -230,9 +230,51 @@ The solution here is `y = 21`. Since, the produced hash ends in 0:
 hash(5 * 21) = 1253e9373e...5e3600155e860
 ```
 
-To recap: In Bitcoin, the Proof of Work algorithm is called Hashcash. And it’s not too different from our basic example above. It’s the algorithm that miners race to solve in order to create a new block. In general, the difficulty is determined by the number of characters searched for in a string. The miners are then rewarded for their solution by receiving a coin—in a transaction.
+To recap: In Bitcoin, the Proof of Work algorithm is called *Hashcash*. And it’s not too different from our basic example above. It’s the algorithm that miners race to solve in order to create a new block. In general, the difficulty is determined by the number of characters searched for in a string. The miners are then rewarded for their solution by receiving a coin—in a transaction.
 
 The network is able to **easily** verify their solution, but the process of reverse engineer takes up a lot of computational power.
+
+Below is a basic implementation of POW:
+
+```python
+import hashlib
+import json
+
+from time import time
+from uuid import uuid4
+
+
+class Blockchain(object):
+    ...
+
+    def proof_of_work(self, last_proof):
+        """
+        Simple Proof of Work Algorithm:
+         - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
+         - p is the previous proof, and p' is the new proof
+        :param last_proof: <int>
+        :return: <int>
+        """
+
+        proof = 0
+        while self.valid_proof(last_proof, proof) is False:
+            proof += 1
+
+        return proof
+
+    @staticmethod
+    def valid_proof(last_proof, proof):
+        """
+        Validates the Proof: Does hash(last_proof, proof) contain 4 leading zeroes?
+        :param last_proof: <int> Previous Proof
+        :param proof: <int> Current Proof
+        :return: <bool> True if correct, False if not.
+        """
+
+        guess = f'{last_proof}{proof}'.encode()
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        return guess_hash[:4] == "0000"
+```
 
 ## Notes
 
