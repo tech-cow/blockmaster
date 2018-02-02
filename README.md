@@ -82,9 +82,10 @@ block = {
     'previous_hash': "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
 }
 
+```
+
 ---
 
-```
 #### Step 3: Adding Transactions to a Block
 
 We will also need to feed `transactions` into each `Block`, the data goes right into `self.current_transactions`, yet the return value is the index of the block that will hold the transaction, which will be useful in later implementation.
@@ -204,9 +205,36 @@ def hash(block):
 
 Step 6: Understanding Proof of Work
 
+To understand POW or Proof of Work, read this [blog](https://medium.com/@karthik.seshu/cryptocurrency-proof-of-work-vs-proof-of-stake-e1eee1420b10). Quote from Karthik:
 
+> Proof of Work (PoW) as the name states is the validation of the work that happened and proving it is correct. Bitcoin and many alt coins follow this way of consensus to make sure the authenticity of the chain is good.
 
-### Notes
+> To understand how it works in simple terms, assume that you are in a math exam along with other students in a classroom. The student who can, not only come up with the correct answer but also can come up with the complete proof (steps in math terms) of arriving at the correct answer first gets the reward. As we know this needs the student with a lot of brain power which naturally consumes a lot of energy from the body.
+
+Let's take a step back and think about our hashing function again. It's very easy for a `hash()` function to generate a hash based on an input because output is consistent. however, It will cost miners a lot of computational power to use given output and reverse engineer back to the input.
+
+for example, if the hash of some integer `x` multiplied by another `y` must end in 0. So, `hash(x * y) = ac23dc...0.` And for this simplified example, let’s fix x = 5. Implementing this in Python:
+
+```python
+from hashlib import sha256
+x = 5
+y = 0  # We don't know what y should be yet...
+while sha256(f'{x*y}'.encode()).hexdigest()[-1] != "0":
+    y += 1
+print(f'The solution is y = {y}')
+```
+
+The solution here is `y = 21`. Since, the produced hash ends in 0:
+
+```python
+hash(5 * 21) = 1253e9373e...5e3600155e860
+```
+
+To recap: In Bitcoin, the Proof of Work algorithm is called Hashcash. And it’s not too different from our basic example above. It’s the algorithm that miners race to solve in order to create a new block. In general, the difficulty is determined by the number of characters searched for in a string. The miners are then rewarded for their solution by receiving a coin—in a transaction.
+
+The network is able to **easily** verify their solution, but the process of reverse engineer takes up a lot of computational power.
+
+## Notes
 
 🐌 **@staticmethod** is a method that belongs to a class but behaves exactly like a regular function, which doesn't take any first `arg` such as `self` or `class`.
 
@@ -217,7 +245,7 @@ def hash(block):
     pass
 ```
 
---------------------------------------------------------------------------------
+---
 
 🍜 **@property** is a shortcut for creating read-only properties. which, in turn, is the simplified syntax for creating a `property` with just a getter.
 
@@ -241,6 +269,6 @@ x = property(getx)
 
 🌱 MIT 🌱
 
---------------------------------------------------------------------------------
+---
 
 > ![home](http://yuzhoujr.com/emoji/home.svg) [yuzhoujr.com](http://www.yuzhoujr.com) · ![github](http://yuzhoujr.com/emoji/github.svg) [@yuzhoujr](https://github.com/yuzhoujr) · ![linkedin](http://yuzhoujr.com/emoji/linkedin.svg) [@yuzhoujr](https://linkedin.com/in/yuzhoujr)
