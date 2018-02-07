@@ -15,7 +15,7 @@
 
 ## External Libraries
 
-Third Party library are used in this project
+Third Party libraries are used in this project
 
 Package    |      Description
 ---------- | :--------------------:
@@ -211,7 +211,7 @@ To understand POW or Proof of Work, read this [blog](https://medium.com/@karthik
 
 > To understand how it works in simple terms, assume that you are in a math exam along with other students in a classroom. The student who can, not only come up with the correct answer but also can come up with the complete proof (steps in math terms) of arriving at the correct answer first gets the reward. As we know this needs the student with a lot of brain power which naturally consumes a lot of energy from the body.
 
-Let's take a step back and think about our hashing function again. It's very easy for a `hash()` function to generate a hash based on an input because output is consistent. however, It will cost miners a lot of computational power to use given output and reverse engineer back to the input.
+Let's take a step back and think about our hashing function again. It's very easy for a `hash()` function to generate a hash based on an input because the output is consistent. however, It will cost miners a lot of computational power to use given output and reverse engineer back to the input.
 
 for example, if the hash of some integer `x` multiplied by another `y` must end in 0. So, `hash(x * y) = ac23dc...0.` And for this simplified example, let’s fix x = 5. Implementing this in Python:
 
