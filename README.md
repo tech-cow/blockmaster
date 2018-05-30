@@ -660,6 +660,8 @@ We restarted the server, mined two blocks, and can view the full blockchain by s
 }
 ```
 
+---
+
 #### Blockchain on Two Nodes
 We can try out the decentralized version of our Blockchain by starting another process on a different port. I copied blockchain.py and changed the port to 5001.
 Let the node on port 5000 be node A and the node on port 5001 be node B. First, we can register node B as a neighbor on node A.
