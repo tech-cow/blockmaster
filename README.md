@@ -590,6 +590,70 @@ x = property(getx)
 
 ## Demo
 
+#### Blockchain API on One Node
+We can interact with the Blockchain after adding the first three endpoints, `/mine`, `/transactions/new`, and `/chain`.
+First, we have to start the server: 
+```bash
+$ python blockchain.py
+* Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+```
+
+Let's mine a block by sending a GET request with Postman to http://localhost:5000/mine
+![mining request using Postman](./screenshots/mine.PNG)
+
+We can create a new transaction by sending a POST request to http://localhost:5000/transactions/new with the transaction data. If you're using Postman, make sure to specify JSON (application/json) in the drop-down menu beside the body's data type.
+![new transaction request using Postman](./screenshots/newTransaction.PNG)
+
+We restarted the server, mined two blocks, and can view the full blockchain by sending a GET request to http://localhost:5000/chain
+```
+{
+    "chain": [
+        {
+            "index": 1,
+            "previous_hash": 1,
+            "proof": 100,
+            "timestamp": 1527706269.185605,
+            "transactions": []
+        },
+        {
+            "index": 2,
+            "previous_hash": "01cbf5ba93195c5637c1861e51736466ee9efccabe9f8931449445aaa2fc1371",
+            "proof": 35293,
+            "timestamp": 1527706277.28505,
+            "transactions": [
+                {
+                    "amount": 1,
+                    "recipient": "f5d52fb583db49bcb0c9c2a51649b2bd",
+                    "sender": "0"
+                }
+            ]
+        },
+        {
+            "index": 3,
+            "previous_hash": "ea09c486a6f390e106d76d81c961f83639ff1d4b0238189eef810d5db1722411",
+            "proof": 35089,
+            "timestamp": 1527706278.5041142,
+            "transactions": [
+                {
+                    "amount": 1,
+                    "recipient": "f5d52fb583db49bcb0c9c2a51649b2bd",
+                    "sender": "0"
+                }
+            ]
+        }
+    ],
+    "length": 3
+}
+```
+
+#### Blockchain on Two Nodes
+We can try out the decentralized version of our Blockchain by starting another process on a different port. I copied blockchain.py and changed the port to 5001.
+Let the node on port 5000 be node A and the node on port 5001 be node B. First, we can register node B as a neighbor on node A.
+![register node](./screenshots/registerNode.PNG)
+
+We mined some blocks on node B to ensure its blockchain was longer than node A's. Then, we sent a GET request to /nodes/resolve on node A to replace its blockchain through the consensus algorithm.
+![resolve conflict](./screenshots/resolve.PNG)
+
 ## License
 
 🌱 MIT 🌱

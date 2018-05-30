@@ -5,6 +5,7 @@ from textwrap import dedent
 from time import time
 from uuid import uuid4
 from urllib.parse import urlparse
+import requests
 
 from flask import Flask, jsonify, request
 
