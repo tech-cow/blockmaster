@@ -24,6 +24,8 @@ Package    |      Description
 `json` | Speed up dictionary sorting
 `uuid` | Globally unique id
 `urllib` | Parse URL
+`requests` | Send HTTP requests
+`flask.Flask` | Micro web framework
 
 <!-- ## Getting Started
 
