@@ -25,7 +25,7 @@ Package    |      Description
 `uuid` | Globally unique id
 `urllib` | Parse URL
 `requests` | Send HTTP requests
-`flask.Flask` | Micro web framework
+`flask` | Micro web framework
 
 <!-- ## Getting Started
 
@@ -207,6 +207,8 @@ def hash(block):
     return hashlib.sha256(block_string).hexdigest()
 ```
 
+---
+
 #### Step 6: Understanding Proof of Work
 
 To understand Proof of Work (POW), read this [blog](https://medium.com/@karthik.seshu/cryptocurrency-proof-of-work-vs-proof-of-stake-e1eee1420b10). Quote from Karthik:
@@ -280,6 +282,8 @@ class Blockchain(object):
         return guess_hash[:4] == "0000"
 ```
 
+---
+
 #### Step 7: Setting up Flask
 We're going to use the Python Flask Framework. This makes it easy to map endpoints to Python functions and allows us to talk to our blockchain over the web using HTTP requests.
 We'll create three methods:
@@ -331,6 +335,8 @@ def full_chain():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 ```    
+
+---
     
 #### Step 8: The Transactions Endpoint
 This is what the request for a transaction will look like:
@@ -369,6 +375,8 @@ def new_transaction():
     response = {'message': f'Transaction will be added to Block {index}'}
     return jsonify(response), 201
 ```
+
+---
 
 #### Step 9: The Mining Endpoint
 This endpoint does three things:
@@ -417,6 +425,8 @@ def mine():
 ```
 At this point, you can interact with the blockchain API. See demo below for instructions and screenshots. 
 
+---
+
 #### Step 10: Consensus
 We have a basic Blockchain that accepts transactions and lets us mine new Blocks. However, the main point of Blockchains is that they should be decentralized. When these Blockchains are decentralized, nodes must agree on the same Blockchain. To ensure nodes agree on a Blockchain, we'll need to implement a consensus algorithm.
 Before we can implement a consensus algorithm, we need a way to let a node know about neighboring nodes in the network. Each node will need to keep a registry of other nodes in the network. Therefore, we'll need more endpoints:
@@ -445,7 +455,9 @@ class Blockchain(object):
 
         parsed_url = urlparse(address)
         self.nodes.add(parsed_url.netloc)
-```        
+```      
+
+---  
 
 #### Step 11: Implementing the Consensus Algorithm
 When one node has a different blockchain than another node, we need to resolve it. We'll make the rule that the longest chain is authoritative. 
