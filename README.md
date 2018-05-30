@@ -15,13 +15,15 @@
 
 ## External Libraries
 
-Third Party libraries are used in this project
+Third Party libraries used in this project
 
 Package    |      Description
 ---------- | :--------------------:
 `hashlib`  | SHA-256 Algorithm Core
 `time` | Access real-time date
 `json` | Speed up dictionary sorting
+`uuid` | Globally unique id
+`urllib` | Parse URL
 
 <!-- ## Getting Started
 
@@ -33,7 +35,7 @@ Package    |      Description
 ## Code Walkthrough
 
 #### Step 1: Creating Blockchain Class
-In `class Blockchain`: a Blockchain object will contain a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create a new block, keep track new transactions, and provide a sophisticated hash algorithm.
+In `class Blockchain`: a Blockchain object will contain a series of blocks within a single chain and another array to keep track of transactions. It should also have the ability to create a new block, keep track of new transactions, and provide a sophisticated hash algorithm.
 
 ```python
 # Abstract Data Type of a Blockchain
@@ -64,9 +66,9 @@ class Blockchain(object):
 ---
 
 #### Step 2: Define a Block
-A single `Block` consist the following data: an `index`, a `timestamp` (in Unix time), a list of `transactions`, a `proof`(implemented later), and the `hash` of the previous Block.
+A single `Block` consists of the following data: an `index`, a `timestamp` (in Unix time), a list of `transactions`, a `proof`(implemented later), and the `hash` of the previous Block.
 
-Here is how a single entry looks like:
+Here is what a single entry looks like:
 ```python
 block = {
     'index': 1,
@@ -88,7 +90,7 @@ block = {
 
 #### Step 3: Adding Transactions to a Block
 
-We will also need to feed `transactions` into each `Block`, the data goes right into `self.current_transactions`, yet the return value is the index of the block that will hold the transaction, which will be useful in later implementation.
+We will also need to feed `transactions` into each `Block`. The data is stored in `self.current_transactions`. The return value is the index of the block that will hold the transaction, which will be useful later.
 
 ```python
 class Blockchain(object):
@@ -132,12 +134,12 @@ class Blockchain(object):
 #### Step 5: Let's implement `new_block()`, `new_transaction()` and `hash()`
 
 `new_block()`
-Time to actually implements some behaviors how our Blockchain would work.
-Recall from Step 2 on how a Block looks like, we will build new blocks based on the same model following a few rules:
+Time to actually implement some behaviors for our Blockchain.
+Recall from Step 2 on what a Block looks like. We will build new blocks based on the same model following a few rules:
 1. Increment `index` as we go
-2. Pass in current time, here we are using a function from `time` package to get real-life timestamp
-3. Pass in `transactions` using our `transactions()` method
-4. Erase value inside of `self.current_transactions` array since this array only serves as a temporary array to hold the most recent transaction.
+2. Pass in current time. We use a function from `time` package to get real-life timestamp
+3. Pass in `transactions` any transactions stored in `self.current_transactions`
+4. Erase value inside of `self.current_transactions` array since this array only serves as a temporary array to hold transactions made since the creation of the last block.
 
 ```python
 def new_block(self, proof, previous_hash=None):
@@ -164,7 +166,7 @@ def new_block(self, proof, previous_hash=None):
 ```
 
 `new_transaction()`
-Very self-explanatory, won't elaborate on this, this newly created transaction will later feed into `new_block`
+This is very self-explanatory,so we won't elaborate on this. This newly created transaction will later feed into `new_block`
 
 ```python
 def new_transaction(self, sender, recipient, amount):
@@ -186,7 +188,7 @@ def new_transaction(self, sender, recipient, amount):
 ```
 
 `hash()`
-Before feeding the string to our hashing algorithm, we need to sort the key inside our dictionary because a key in the dictionary has arbitrary order, thus disrupt output hash due to inconsistency.
+Before feeding the string to our hashing algorithm, we need to sort the keys inside our dictionary because keys are generated in an arbitrary order, thus disrupting the output hash due to inconsistency.
 We are using [SHA-256 Hashing Algorithm](https://www.youtube.com/watch?v=DMtFhACPnTY) to create hexadecimal string hash.
 
 ```python
@@ -205,7 +207,7 @@ def hash(block):
 
 #### Step 6: Understanding Proof of Work
 
-To understand POW or Proof of Work, read this [blog](https://medium.com/@karthik.seshu/cryptocurrency-proof-of-work-vs-proof-of-stake-e1eee1420b10). Quote from Karthik:
+To understand Proof of Work (POW), read this [blog](https://medium.com/@karthik.seshu/cryptocurrency-proof-of-work-vs-proof-of-stake-e1eee1420b10). Quote from Karthik:
 
 > Proof of Work (PoW) as the name states is the validation of the work that happened and proving it is correct. Bitcoin and many alt coins follow this way of consensus to make sure the authenticity of the chain is good.
 
@@ -232,7 +234,7 @@ hash(5 * 21) = 1253e9373e...5e3600155e860
 
 To recap: In Bitcoin, the Proof of Work algorithm is called *Hashcash*. And it’s not too different from our basic example above. It’s the algorithm that miners race to solve in order to create a new block. In general, the difficulty is determined by the number of characters searched for in a string. The miners are then rewarded for their solution by receiving a coin—in a transaction.
 
-The network is able to **easily** verify their solution, but the process of reverse engineer takes up a lot of computational power.
+The network is able to **easily** verify their solution, but the process of reverse engineering takes up a lot of computational power.
 
 Below is a basic implementation of POW:
 
@@ -275,6 +277,287 @@ class Blockchain(object):
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
 ```
+
+#### Step 7: Setting up Flask
+We're going to use the Python Flask Framework. This makes it easy to map endpoints to Python functions and allows us to talk to our blockchain over the web using HTTP requests.
+We'll create three methods:
+* `/transactions/new` to create a new transaction and add it to a block
+* `/mine` to mine a new block
+* `/chain` to return the full Blockchain
+
+We instantiate our Flask Node with a random identifier. We instantiate our Blockchain object and create our endpoints. `/mine` and `/chain` are GET requests while `/transactions/new` is a POST request. Finally, we run the server on port 5000.
+```python
+import hashlib
+import json
+from textwrap import dedent
+from time import time
+from uuid import uuid4
+
+from flask import Flask
+
+
+class Blockchain(object):
+    ...
+
+
+# Instantiate our Node
+app = Flask(__name__)
+
+# Generate a globally unique address for this node
+node_identifier = str(uuid4()).replace('-', '')
+
+# Instantiate the Blockchain
+blockchain = Blockchain()
+
+
+@app.route('/mine', methods=['GET'])
+def mine():
+    return "We'll mine a new Block"
+  
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    return "We'll add a new transaction"
+
+@app.route('/chain', methods=['GET'])
+def full_chain():
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain),
+    }
+    return jsonify(response), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+```    
+    
+#### Step 8: The Transactions Endpoint
+This is what the request for a transaction will look like:
+```
+{
+ "sender": "my address",
+ "recipient": "someone else's address",
+ "amount": 5
+}
+```
+Since we have our class method for adding transactions to a block, we just need to invoke it in the transaction endpoint. We check that all required data are present in the post request. Then, we add the new transaction to the blockchain.
+
+```python
+import hashlib
+import json
+from textwrap import dedent
+from time import time
+from uuid import uuid4
+
+from flask import Flask, jsonify, request
+
+...
+
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    values = request.get_json()
+
+    # Check that the required fields are in the POST'ed data
+    required = ['sender', 'recipient', 'amount']
+    if not all(k in values for k in required):
+        return 'Missing values', 400
+
+    # Create a new Transaction
+    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+
+    response = {'message': f'Transaction will be added to Block {index}'}
+    return jsonify(response), 201
+```
+
+#### Step 9: The Mining Endpoint
+This endpoint does three things:
+* Calculates the Proof of Work (POW)
+* Rewards the miner by adding a transaction giving the miner one coin
+* Forges the new Block by adding it to the chain
+
+```python
+import hashlib
+import json
+
+from time import time
+from uuid import uuid4
+
+from flask import Flask, jsonify, request
+
+...
+
+@app.route('/mine', methods=['GET'])
+def mine():
+    # We run the proof of work algorithm to get the next proof...
+    last_block = blockchain.last_block
+    last_proof = last_block['proof']
+    proof = blockchain.proof_of_work(last_proof)
+
+    # We must receive a reward for finding the proof.
+    # The sender is "0" to signify that this node has mined a new coin.
+    blockchain.new_transaction(
+        sender="0",
+        recipient=node_identifier,
+        amount=1,
+    )
+
+    # Forge the new Block by adding it to the chain
+    previous_hash = blockchain.hash(last_block)
+    block = blockchain.new_block(proof, previous_hash)
+
+    response = {
+        'message': "New Block Forged",
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash'],
+    }
+    return jsonify(response), 200
+```
+At this point, you can interact with the blockchain API. See demo below for instructions and screenshots. 
+
+#### Step 10: Consensus
+We have a basic Blockchain that accepts transactions and lets us mine new Blocks. However, the main point of Blockchains is that they should be decentralized. When these Blockchains are decentralized, nodes must agree on the same Blockchain. To ensure nodes agree on a Blockchain, we'll need to implement a consensus algorithm.
+Before we can implement a consensus algorithm, we need a way to let a node know about neighboring nodes in the network. Each node will need to keep a registry of other nodes in the network. Therefore, we'll need more endpoints:
+* `/nodes/register` to accept a list of new nodes from the parameters in the URL
+* `/nodes/resovle` to implement our consensus algorithm which resolves any conflicts to ensure a node has the correct chain
+We'll need to modify our Blockchain's constructor and create a method for registering nodes
+
+```python
+...
+from urllib.parse import urlparse
+...
+
+
+class Blockchain(object):
+    def __init__(self):
+        ...
+        self.nodes = set()
+        ...
+
+    def register_node(self, address):
+        """
+        Add a new node to the list of nodes
+        :param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
+        :return: None
+        """
+
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
+```        
+
+#### Step 11: Implementing the Consensus Algorithm
+When one node has a different blockchain than another node, we need to resolve it. We'll make the rule that the longest chain is authoritative. 
+The method `valid_chain` checks whether a given blockchain is valid by verifying the hash and proof of work of each block in the blockchain.
+The method `resolve_conflicts` checks each neighboring node, downloads their chains, and verifies them. The node replaces its blockchain with the longest valid blockchain found.
+```python
+...
+import requests
+
+
+class Blockchain(object)
+    ...
+    
+    def valid_chain(self, chain):
+        """
+        Determine if a given blockchain is valid
+        :param chain: <list> A blockchain
+        :return: <bool> True if valid, False if not
+        """
+
+        last_block = chain[0]
+        current_index = 1
+
+        while current_index < len(chain):
+            block = chain[current_index]
+            print(f'{last_block}')
+            print(f'{block}')
+            print("\n-----------\n")
+            # Check that the hash of the block is correct
+            if block['previous_hash'] != self.hash(last_block):
+                return False
+
+            # Check that the Proof of Work is correct
+            if not self.valid_proof(last_block['proof'], block['proof']):
+                return False
+
+            last_block = block
+            current_index += 1
+
+        return True
+
+    def resolve_conflicts(self):
+        """
+        This is our Consensus Algorithm, it resolves conflicts
+        by replacing our chain with the longest one in the network.
+        :return: <bool> True if our chain was replaced, False if not
+        """
+
+        neighbours = self.nodes
+        new_chain = None
+
+        # We're only looking for chains longer than ours
+        max_length = len(self.chain)
+
+        # Grab and verify the chains from all the nodes in our network
+        for node in neighbours:
+            response = requests.get(f'http://{node}/chain')
+
+            if response.status_code == 200:
+                length = response.json()['length']
+                chain = response.json()['chain']
+
+                # Check if the length is longer and the chain is valid
+                if length > max_length and self.valid_chain(chain):
+                    max_length = length
+                    new_chain = chain
+
+        # Replace our chain if we discovered a new, valid chain longer than ours
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
+```
+
+Finally, we register the two endpoints to our API for adding neighboring nodes and resolving conflicts
+
+```python
+@app.route('/nodes/register', methods=['POST'])
+def register_nodes():
+    values = request.get_json()
+
+    nodes = values.get('nodes')
+    if nodes is None:
+        return "Error: Please supply a valid list of nodes", 400
+
+    for node in nodes:
+        blockchain.register_node(node)
+
+    response = {
+        'message': 'New nodes have been added',
+        'total_nodes': list(blockchain.nodes),
+    }
+    return jsonify(response), 201
+
+
+@app.route('/nodes/resolve', methods=['GET'])
+def consensus():
+    replaced = blockchain.resolve_conflicts()
+
+    if replaced:
+        response = {
+            'message': 'Our chain was replaced',
+            'new_chain': blockchain.chain
+        }
+    else:
+        response = {
+            'message': 'Our chain is authoritative',
+            'chain': blockchain.chain
+        }
+
+    return jsonify(response), 200
+```
+At this point, you can run this node on another machine or run a another process on the same machine using a different port. See below for instructions and screenshots.
 
 ## Notes
 
